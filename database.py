@@ -1,34 +1,62 @@
 import sqlite3
+import json
 import logging
+from typing import Optional
 
 class Database:
-    def __init__(self, db_path='bot.db'):
+    def __init__(self, db_path: str = 'bot.db'):
         self.db_path = db_path
+        self.logger = logging.getLogger(__name__)
         self.init_db()
     
-    def init_db(self):
+    def init_db(self) -> None:
         """Инициализация таблиц в базе данных"""
-        with sqlite3.connect(self.db_path) as conn:
-            cursor = conn.cursor()
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS messages (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    chat_id INTEGER NOT NULL,
-                    user_id INTEGER NOT NULL,
-                    message_text TEXT NOT NULL,
-                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-                )
-            ''')
-            conn.commit()
-            logging.info("Database initialized")
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                
+                # Таблица для хранения всех апдейтов (требование Д/З)
+                cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS telegram_updates (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        update_id INTEGER NOT NULL UNIQUE,
+                        update_data TEXT NOT NULL,
+                        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                    )
+                ''')
+                
+                conn.commit()
+                self.logger.info("Database initialized successfully")
+                
+        except Exception as e:
+            self.logger.error(f"Error initializing database: {e}")
+            raise
     
-    def save_message(self, chat_id, user_id, message_text):
-        """Сохранение сообщения в базу данных"""
-        with sqlite3.connect(self.db_path) as conn:
-            cursor = conn.cursor()
-            cursor.execute('''
-                INSERT INTO messages (chat_id, user_id, message_text)
-                VALUES (?, ?, ?)
-            ''', (chat_id, user_id, message_text))
-            conn.commit()
-            logging.info(f"Message saved: {message_text}")
+    def save_update(self, update_id: int, update_data: dict) -> bool:
+        """Сохранение апдейта в базу данных"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT OR IGNORE INTO telegram_updates (update_id, update_data)
+                    VALUES (?, ?)
+                ''', (update_id, json.dumps(update_data)))
+                conn.commit()
+                
+                self.logger.debug(f"Update saved: {update_id}")
+                return True
+                
+        except Exception as e:
+            self.logger.error(f"Error saving update: {e}")
+            return False
+    
+    def get_updates_count(self) -> int:
+        """Получение количества сохраненных апдейтов"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('SELECT COUNT(*) FROM telegram_updates')
+                return cursor.fetchone()[0]
+        except Exception as e:
+            self.logger.error(f"Error getting updates count: {e}")
+            return 0

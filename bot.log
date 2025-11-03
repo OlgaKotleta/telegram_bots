@@ -1,0 +1,68 @@
+2025-10-30 21:26:54,915 - INFO - Database initialized successfully
+2025-10-30 21:26:54,915 - INFO - Dispatcher initialized
+2025-10-30 21:26:54,916 - INFO - Handler registered for command: /start
+2025-10-30 21:26:54,916 - INFO - Handler registered for command: /help
+2025-10-30 21:26:54,916 - INFO - Default handler set
+2025-10-30 21:26:54,916 - INFO - Bot initialized with dispatcher pattern
+2025-10-30 21:26:54,916 - INFO - Bot started polling with dispatcher...
+2025-10-30 21:30:34,954 - ERROR - Error saving message: table messages has no column named message_type
+2025-10-30 21:30:35,282 - INFO - Echo response sent: Эхо: Привет
+2025-10-30 21:30:35,282 - INFO - Message processed by handler: message
+2025-10-30 21:30:46,729 - ERROR - Error saving message: table messages has no column named message_type
+2025-10-30 21:30:47,139 - INFO - Start command processed for chat 1924833319
+2025-10-30 21:30:47,139 - INFO - Message processed by handler: /start
+2025-10-30 21:30:51,149 - ERROR - Error saving message: table messages has no column named message_type
+2025-10-30 21:30:51,541 - INFO - Help command processed for chat 1924833319
+2025-10-30 21:30:51,541 - INFO - Message processed by handler: /help
+2025-10-30 21:33:23,597 - ERROR - Error saving message: table messages has no column named message_type
+2025-10-30 21:33:23,817 - INFO - Echo response sent: Эхо: Окей
+2025-10-30 21:33:23,817 - INFO - Message processed by handler: message
+2025-10-30 21:42:56,200 - INFO - Bot stopped by user
+2025-10-30 21:48:26,796 - database - INFO - Database initialized successfully
+2025-10-30 21:48:26,796 - dispatcher - INFO - Dispatcher initialized
+2025-10-30 21:48:26,797 - dispatcher - INFO - Handler registered: DatabaseLogger
+2025-10-30 21:48:26,797 - dispatcher - INFO - Handler registered: MessageTextEcho
+2025-10-30 21:48:26,797 - dispatcher - INFO - Handler registered: MessagePhotoEcho
+2025-10-30 21:48:26,797 - root - INFO - Bot started with dispatcher pattern
+2025-10-30 21:48:26,797 - root - INFO - Registered handlers: DatabaseLogger, MessageTextEcho, MessagePhotoEcho
+2025-10-30 21:48:26,797 - long_polling - INFO - Starting long polling...
+2025-10-30 21:48:42,404 - DatabaseLogger - INFO - Update 234163911 saved to database
+2025-10-30 21:48:42,801 - MessagePhotoEcho - INFO - Photo echo sent, file_id: AgACAgIAAxkBAAMVaQOzCtdmB85zmFq2LVrD_jDRB98AAqr-MRurryBInDhaHlf_AAFRAQADAgADeQADNgQ
+2025-10-30 22:02:54,244 - long_polling - INFO - Long polling stopped by user
+2025-11-03 11:45:04,922 - database - INFO - Database initialized successfully
+2025-11-03 11:45:04,923 - dispatcher - INFO - Dispatcher initialized
+2025-11-03 11:45:04,923 - dispatcher - INFO - Handler registered: DatabaseLogger
+2025-11-03 11:45:04,924 - dispatcher - INFO - Handler registered: MessageTextEcho
+2025-11-03 11:45:04,924 - dispatcher - INFO - Handler registered: MessagePhotoEcho
+2025-11-03 11:45:04,924 - root - INFO - Bot started with dispatcher pattern
+2025-11-03 11:45:04,924 - root - INFO - Registered handlers: DatabaseLogger, MessageTextEcho, MessagePhotoEcho
+2025-11-03 11:45:04,924 - long_polling - INFO - Starting long polling...
+2025-11-03 11:46:41,967 - DatabaseLogger - INFO - Update 234163912 saved to database
+2025-11-03 11:46:42,370 - MessageTextEcho - INFO - Echo response sent: Эхо: Ало
+2025-11-03 11:46:54,884 - DatabaseLogger - INFO - Update 234163913 saved to database
+2025-11-03 11:46:55,125 - MessagePhotoEcho - INFO - Photo echo sent, file_id: AgACAgIAAxkBAAMZaQhr_jLWF7RJw_ehLWqeInLXxDQAAij_MRv6ZjFIMCldRrnANyQBAAMCAAN5AAM2BA
+2025-11-03 11:58:26,699 - long_polling - INFO - Long polling stopped by user
+2025-11-03 12:12:17,326 - database - INFO - Database initialized successfully
+2025-11-03 12:12:17,327 - dispatcher - INFO - Dispatcher initialized
+2025-11-03 12:12:17,327 - dispatcher - INFO - Handler registered: DatabaseLogger
+2025-11-03 12:12:17,327 - dispatcher - INFO - Handler registered: MessageTextEcho
+2025-11-03 12:12:17,327 - dispatcher - INFO - Handler registered: MessagePhotoEcho
+2025-11-03 12:12:17,327 - root - INFO - Bot started with dispatcher pattern
+2025-11-03 12:12:17,328 - root - INFO - Registered handlers: DatabaseLogger, MessageTextEcho, MessagePhotoEcho
+2025-11-03 12:12:17,328 - long_polling - INFO - Starting long polling...
+2025-11-03 12:12:19,490 - long_polling - INFO - Long polling stopped by user
+2025-11-03 12:21:43,284 - database - INFO - Database initialized successfully
+2025-11-03 12:21:43,284 - dispatcher - INFO - Dispatcher initialized
+2025-11-03 12:21:43,285 - dispatcher - INFO - Handler registered: DatabaseLogger
+2025-11-03 12:21:43,285 - dispatcher - INFO - Handler registered: MessageTextEcho
+2025-11-03 12:21:43,285 - dispatcher - INFO - Handler registered: MessagePhotoEcho
+2025-11-03 12:21:43,285 - root - INFO - Bot started with dispatcher pattern
+2025-11-03 12:21:43,285 - root - INFO - Registered handlers: DatabaseLogger, MessageTextEcho, MessagePhotoEcho
+2025-11-03 12:21:43,285 - long_polling - INFO - Starting long polling...
+2025-11-03 12:21:52,638 - DatabaseLogger - INFO - Update 234163916 saved to database
+2025-11-03 12:21:53,037 - MessagePhotoEcho - INFO - Photo echo sent, file_id: AgACAgIAAxkBAAMZaQhr_jLWF7RJw_ehLWqeInLXxDQAAij_MRv6ZjFIMCldRrnANyQBAAMCAAN5AAM2BA
+2025-11-03 12:22:16,383 - DatabaseLogger - INFO - Update 234163917 saved to database
+2025-11-03 12:22:16,687 - MessageTextEcho - INFO - Echo response sent: Эхо: Ало
+2025-11-03 12:22:17,926 - DatabaseLogger - INFO - Update 234163918 saved to database
+2025-11-03 12:22:18,321 - MessageTextEcho - INFO - Echo response sent: Эхо: Ло
+2025-11-03 12:22:40,818 - long_polling - INFO - Long polling stopped by user
