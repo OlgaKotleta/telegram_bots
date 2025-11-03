@@ -3,5 +3,5 @@ venv/
 *.db
 __pycache__/
 *.pyc
-simple_bot.py
-*.log
+bot.log
+pretty_view.py
