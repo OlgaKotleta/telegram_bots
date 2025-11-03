@@ -40,7 +40,7 @@ class Database:
                 cursor.execute('''
                     INSERT OR IGNORE INTO telegram_updates (update_id, update_data)
                     VALUES (?, ?)
-                ''', (update_id, json.dumps(update_data, ensure_ascii=False)))  # ← ИСПРАВЛЕНИЕ ЗДЕСЬ
+                ''', (update_id, json.dumps(update_data, ensure_ascii=False, indent=2)))  # ← ОБА ИСПРАВЛЕНИЯ ЗДЕСЬ
                 conn.commit()
                 
                 self.logger.debug(f"Update saved: {update_id}")

@@ -7,7 +7,6 @@ class DatabaseLogger(Handler):
     """Обработчик для логирования всех апдейтов в БД"""
     
     def can_handle(self, update: Dict[str, Any]) -> bool:
-        """Может обрабатывать все апдейты"""
         return True
     
     def handle(self, update: Dict[str, Any], db) -> bool:

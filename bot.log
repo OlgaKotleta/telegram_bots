@@ -116,3 +116,26 @@
 2025-11-03 13:13:21,679 - root - INFO - Registered handlers: DatabaseLogger, MessageTextEcho, MessagePhotoEcho
 2025-11-03 13:13:21,679 - long_polling - INFO - Starting long polling...
 2025-11-03 13:14:51,620 - long_polling - INFO - Long polling stopped by user
+2025-11-03 13:35:04,109 - database - INFO - Database initialized successfully
+2025-11-03 13:35:04,109 - dispatcher - INFO - Dispatcher initialized
+2025-11-03 13:35:04,109 - dispatcher - INFO - Handler registered: DatabaseLogger
+2025-11-03 13:35:04,109 - dispatcher - INFO - Handler registered: MessageTextEcho
+2025-11-03 13:35:04,110 - dispatcher - INFO - Handler registered: MessagePhotoEcho
+2025-11-03 13:35:04,110 - root - INFO - Bot started with dispatcher pattern
+2025-11-03 13:35:04,110 - root - INFO - Registered handlers: DatabaseLogger, MessageTextEcho, MessagePhotoEcho
+2025-11-03 13:35:04,110 - long_polling - INFO - Starting long polling...
+2025-11-03 13:35:30,827 - DatabaseLogger - INFO - Update 234163929 saved to database
+2025-11-03 13:35:35,283 - DatabaseLogger - INFO - Update 234163930 saved to database
+2025-11-03 13:43:34,301 - long_polling - INFO - Long polling stopped by user
+2025-11-03 13:46:08,986 - database - INFO - Database initialized successfully
+2025-11-03 13:46:08,987 - dispatcher - INFO - Dispatcher initialized
+2025-11-03 13:46:08,987 - dispatcher - INFO - Handler registered: DatabaseLogger
+2025-11-03 13:46:08,987 - dispatcher - INFO - Handler registered: MessageTextEcho
+2025-11-03 13:46:08,987 - dispatcher - INFO - Handler registered: MessagePhotoEcho
+2025-11-03 13:46:08,987 - root - INFO - Bot started with dispatcher pattern
+2025-11-03 13:46:08,987 - root - INFO - Registered handlers: DatabaseLogger, MessageTextEcho, MessagePhotoEcho
+2025-11-03 13:46:08,987 - long_polling - INFO - Starting long polling...
+2025-11-03 13:46:26,778 - DatabaseLogger - INFO - Update 234163931 saved to database
+2025-11-03 13:46:27,030 - MessageTextEcho - INFO - Echo response sent: Эхо: Здравствуйте
+2025-11-03 13:48:27,553 - DatabaseLogger - INFO - Update 234163932 saved to database
+2025-11-03 13:48:27,753 - MessageTextEcho - INFO - Echo response sent: Эхо: А
