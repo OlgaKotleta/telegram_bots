@@ -66,3 +66,43 @@
 2025-11-03 12:22:17,926 - DatabaseLogger - INFO - Update 234163918 saved to database
 2025-11-03 12:22:18,321 - MessageTextEcho - INFO - Echo response sent: Эхо: Ло
 2025-11-03 12:22:40,818 - long_polling - INFO - Long polling stopped by user
+2025-11-03 12:31:43,268 - database - INFO - Database initialized successfully
+2025-11-03 12:31:43,269 - dispatcher - INFO - Dispatcher initialized
+2025-11-03 12:31:43,269 - dispatcher - INFO - Handler registered: DatabaseLogger
+2025-11-03 12:31:43,269 - dispatcher - INFO - Handler registered: MessageTextEcho
+2025-11-03 12:31:43,269 - dispatcher - INFO - Handler registered: MessagePhotoEcho
+2025-11-03 12:31:43,269 - root - INFO - Bot started with dispatcher pattern
+2025-11-03 12:31:43,269 - root - INFO - Registered handlers: DatabaseLogger, MessageTextEcho, MessagePhotoEcho
+2025-11-03 12:31:43,270 - long_polling - INFO - Starting long polling...
+2025-11-03 12:33:30,841 - DatabaseLogger - INFO - Update 234163919 saved to database
+2025-11-03 12:33:32,112 - DatabaseLogger - INFO - Update 234163920 saved to database
+2025-11-03 12:33:35,833 - DatabaseLogger - INFO - Update 234163921 saved to database
+2025-11-03 12:33:36,069 - MessageTextEcho - INFO - Echo response sent: Эхо: О
+2025-11-03 12:33:44,352 - DatabaseLogger - INFO - Update 234163922 saved to database
+2025-11-03 12:33:45,880 - DatabaseLogger - INFO - Update 234163923 saved to database
+2025-11-03 12:33:46,063 - MessageTextEcho - INFO - Echo response sent: Эхо: 12:33
+2025-11-03 12:33:57,886 - DatabaseLogger - INFO - Update 234163924 saved to database
+2025-11-03 12:33:58,073 - MessageTextEcho - INFO - Echo response sent: Эхо: Gg
+2025-11-03 12:33:58,227 - DatabaseLogger - INFO - Update 234163925 saved to database
+2025-11-03 12:33:58,413 - MessagePhotoEcho - INFO - Photo echo sent, file_id: AgACAgIAAxkBAAMtaQh3BnmwmCmu3EPYT2-L_0-P6FUAAm4MaxsbM0lIN4fsF3Bmxm0BAAMCAAN4AAM2BA
+2025-11-03 12:34:05,238 - DatabaseLogger - INFO - Update 234163926 saved to database
+2025-11-03 12:41:11,910 - long_polling - INFO - Long polling stopped by user
+2025-11-03 12:46:41,594 - database - INFO - Database initialized successfully
+2025-11-03 12:46:41,595 - dispatcher - INFO - Dispatcher initialized
+2025-11-03 12:46:41,595 - dispatcher - INFO - Handler registered: DatabaseLogger
+2025-11-03 12:46:41,595 - dispatcher - INFO - Handler registered: MessageTextEcho
+2025-11-03 12:46:41,595 - dispatcher - INFO - Handler registered: MessagePhotoEcho
+2025-11-03 12:46:41,595 - root - INFO - Bot started with dispatcher pattern
+2025-11-03 12:46:41,595 - root - INFO - Registered handlers: DatabaseLogger, MessageTextEcho, MessagePhotoEcho
+2025-11-03 12:46:41,595 - long_polling - INFO - Starting long polling...
+2025-11-03 13:07:04,762 - long_polling - INFO - Long polling stopped by user
+2025-11-03 13:10:10,724 - database - INFO - Database initialized successfully
+2025-11-03 13:10:10,724 - dispatcher - INFO - Dispatcher initialized
+2025-11-03 13:10:10,724 - dispatcher - INFO - Handler registered: DatabaseLogger
+2025-11-03 13:10:10,724 - dispatcher - INFO - Handler registered: MessageTextEcho
+2025-11-03 13:10:10,724 - dispatcher - INFO - Handler registered: MessagePhotoEcho
+2025-11-03 13:10:10,724 - root - INFO - Bot started with dispatcher pattern
+2025-11-03 13:10:10,724 - root - INFO - Registered handlers: DatabaseLogger, MessageTextEcho, MessagePhotoEcho
+2025-11-03 13:10:10,725 - long_polling - INFO - Starting long polling...
+2025-11-03 13:10:26,824 - DatabaseLogger - INFO - Update 234163927 saved to database
+2025-11-03 13:10:32,436 - DatabaseLogger - INFO - Update 234163928 saved to database

@@ -9,21 +9,18 @@ class Handler(ABC):
         self.logger = logging.getLogger(self.__class__.__name__)
     
     @abstractmethod
-    def handle(self, update: Dict[str, Any], db) -> bool:
-        """
-        Обработать апдейт
-        
-        Args:
-            update: Данные от Telegram
-            db: Объект базы данных
-            
-        Returns:
-            bool: True - продолжить обработку, False - остановить
-        """
-        pass
-    
     def can_handle(self, update: Dict[str, Any]) -> bool:
         """
         Проверить, может ли обработчик обработать данный апдейт
         """
-        return True
+        pass
+    
+    @abstractmethod
+    def handle(self, update: Dict[str, Any], db) -> bool:
+        """
+        Обработать апдейт
+        
+        Returns:
+            bool: True - продолжить обработку, False - остановить
+        """
+        pass

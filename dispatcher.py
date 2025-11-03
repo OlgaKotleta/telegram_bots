@@ -21,13 +21,11 @@ class Dispatcher:
             if handler.can_handle(update):
                 try:
                     continue_processing = handler.handle(update, db)
-                    self.logger.debug(f"Handler {handler.__class__.__name__} processed update {update.get('update_id')}, continue: {continue_processing}")
+                    self.logger.debug(f"Handler {handler.__class__.__name__} processed update")
                     
                     if not continue_processing:
-                        self.logger.debug(f"Handler {handler.__class__.__name__} stopped processing chain")
                         break
                         
                 except Exception as e:
                     self.logger.error(f"Error in handler {handler.__class__.__name__}: {e}")
-                    # Продолжаем обработку с другими обработчиками даже при ошибке
                     continue

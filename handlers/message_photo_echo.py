@@ -1,14 +1,9 @@
 import logging
 import json
 import os
-import sys
 from typing import Dict, Any
 from urllib.request import urlopen, Request
 from urllib.parse import urlencode
-
-# Добавляем корневую папку в путь для импортов
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from handler import Handler
 
 class MessagePhotoEcho(Handler):
@@ -20,13 +15,13 @@ class MessagePhotoEcho(Handler):
                 'photo' in update['message'])
     
     def handle(self, update: Dict[str, Any], db) -> bool:
-        """Отправляет эхо-фото и разрешает продолжение обработки"""
+        """Отправляет эхо-фото"""
         try:
             message = update['message']
             chat_id = message['chat']['id']
             photos = message['photo']
             
-            # Выбираем фото с максимальным размером (требование Д/З)
+            # Выбираем фото с максимальным размером
             largest_photo = max(photos, key=lambda x: x['file_size'])
             file_id = largest_photo['file_id']
             
@@ -34,8 +29,7 @@ class MessagePhotoEcho(Handler):
             self._send_photo(chat_id, file_id)
             self.logger.info(f"Photo echo sent, file_id: {file_id}")
             
-            # Разрешаем продолжение обработки
-            return True
+            return True  # Продолжаем обработку
             
         except Exception as e:
             self.logger.error(f"Error in MessagePhotoEcho: {e}")
