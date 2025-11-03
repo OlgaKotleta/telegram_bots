@@ -15,7 +15,7 @@ class Database:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
                 
-                # Таблица для хранения всех апдейтов (требование Д/З)
+                # Таблица для хранения всех апдейтов
                 cursor.execute('''
                     CREATE TABLE IF NOT EXISTS telegram_updates (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,7 +40,7 @@ class Database:
                 cursor.execute('''
                     INSERT OR IGNORE INTO telegram_updates (update_id, update_data)
                     VALUES (?, ?)
-                ''', (update_id, json.dumps(update_data)))
+                ''', (update_id, json.dumps(update_data, ensure_ascii=False)))  # ← ИСПРАВЛЕНИЕ ЗДЕСЬ
                 conn.commit()
                 
                 self.logger.debug(f"Update saved: {update_id}")

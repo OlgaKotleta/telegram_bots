@@ -1,11 +1,6 @@
 import logging
-import os
-import sys
+import json
 from typing import Dict, Any
-
-# Добавляем корневую папку в путь для импортов
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from handler import Handler
 
 class DatabaseLogger(Handler):
@@ -23,10 +18,9 @@ class DatabaseLogger(Handler):
                 db.save_update(update_id, update)
                 self.logger.info(f"Update {update_id} saved to database")
             
-            # Всегда разрешаем продолжение обработки (требование Д/З)
+            # Всегда разрешаем продолжение обработки
             return True
             
         except Exception as e:
             self.logger.error(f"Error in DatabaseLogger: {e}")
-            # Разрешаем продолжение даже при ошибке
             return True
