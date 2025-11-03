@@ -106,3 +106,13 @@
 2025-11-03 13:10:10,725 - long_polling - INFO - Starting long polling...
 2025-11-03 13:10:26,824 - DatabaseLogger - INFO - Update 234163927 saved to database
 2025-11-03 13:10:32,436 - DatabaseLogger - INFO - Update 234163928 saved to database
+2025-11-03 13:13:04,677 - long_polling - INFO - Long polling stopped by user
+2025-11-03 13:13:21,678 - database - INFO - Database initialized successfully
+2025-11-03 13:13:21,679 - dispatcher - INFO - Dispatcher initialized
+2025-11-03 13:13:21,679 - dispatcher - INFO - Handler registered: DatabaseLogger
+2025-11-03 13:13:21,679 - dispatcher - INFO - Handler registered: MessageTextEcho
+2025-11-03 13:13:21,679 - dispatcher - INFO - Handler registered: MessagePhotoEcho
+2025-11-03 13:13:21,679 - root - INFO - Bot started with dispatcher pattern
+2025-11-03 13:13:21,679 - root - INFO - Registered handlers: DatabaseLogger, MessageTextEcho, MessagePhotoEcho
+2025-11-03 13:13:21,679 - long_polling - INFO - Starting long polling...
+2025-11-03 13:14:51,620 - long_polling - INFO - Long polling stopped by user
