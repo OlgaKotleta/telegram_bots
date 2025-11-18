@@ -1,8 +1,7 @@
-venv/
 .env
 *.db
-__pycache__/
-*.pyc
-bot.log
 *.log
-pretty_view.py
+__pycache__/
+venv/
+.venv/
+bot-env/
