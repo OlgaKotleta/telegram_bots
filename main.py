@@ -5,7 +5,15 @@ from dotenv import load_dotenv
 from database import Database
 from dispatcher import Dispatcher
 from long_polling import start_long_polling
-from handlers import DatabaseLogger, MessageTextEcho, MessagePhotoEcho
+from handlers.database_logger import DatabaseLogger
+from handlers.start_handler import StartHandler
+from handlers.help_handler import HelpHandler
+from handlers.pizza_name_handler import PizzaNameHandler
+from handlers.pizza_size_handler import PizzaSizeHandler
+from handlers.drink_handler import DrinkHandler
+from handlers.order_review_handler import OrderReviewHandler
+from handlers.restart_order_handler import RestartOrderHandler
+from handlers.fallback_handler import FallbackHandler
 
 # Настройка логирования
 logging.basicConfig(
@@ -28,15 +36,21 @@ def main():
     
     # Инициализация компонентов
     db = Database()
-    dispatcher = Dispatcher()
+    dispatcher = Dispatcher(db)
     
-    # Регистрация обработчиков (важен порядок!)
-    dispatcher.register_handler(DatabaseLogger())      # Первый - логирует всё
-    dispatcher.register_handler(MessageTextEcho())    # Текстовые сообщения
-    dispatcher.register_handler(MessagePhotoEcho())   # Фото
+    # Регистрация обработчиков (ВАЖЕН ПОРЯДОК!)
+    dispatcher.register_handler(DatabaseLogger())      # 1. Логирует всё в БД
+    dispatcher.register_handler(StartHandler())        # 2. Команда /start
+    dispatcher.register_handler(HelpHandler())         # 3. Команда /help  
+    dispatcher.register_handler(RestartOrderHandler()) # 4. Перезапуск заказа
+    dispatcher.register_handler(PizzaNameHandler())    # 5. Выбор пиццы
+    dispatcher.register_handler(PizzaSizeHandler())    # 6. Выбор размера
+    dispatcher.register_handler(DrinkHandler())        # 7. Выбор напитка
+    dispatcher.register_handler(OrderReviewHandler())  # 8. Подтверждение заказа
+    dispatcher.register_handler(FallbackHandler())     # 9. Обработка остальных сообщений
     
-    logging.info("Bot started with dispatcher pattern")
-    logging.info("Registered handlers: DatabaseLogger, MessageTextEcho, MessagePhotoEcho")
+    logging.info("Pizza Shop Bot started")
+    logging.info("Registered handlers for pizza ordering workflow")
     
     # Запуск long polling
     try:

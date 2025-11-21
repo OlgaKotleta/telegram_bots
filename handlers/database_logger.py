@@ -1,15 +1,16 @@
 import logging
-import json
 from typing import Dict, Any
 from handler import Handler
+from states import UserState
 
 class DatabaseLogger(Handler):
     """Обработчик для логирования всех апдейтов в БД"""
     
-    def can_handle(self, update: Dict[str, Any]) -> bool:
+    def can_handle(self, update: Dict[str, Any], state: UserState) -> bool:
+        """Может обрабатывать все апдейты"""
         return True
     
-    def handle(self, update: Dict[str, Any], db) -> bool:
+    def handle(self, update: Dict[str, Any], db, state: UserState, order_json: Dict[str, Any]) -> bool:
         """Сохраняет апдейт в БД и разрешает продолжение обработки"""
         try:
             update_id = update.get('update_id')

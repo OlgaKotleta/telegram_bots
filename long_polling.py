@@ -3,6 +3,7 @@ import json
 from urllib.request import urlopen, Request
 from urllib.parse import urlencode
 from dispatcher import Dispatcher
+from database import Database
 
 logger = logging.getLogger(__name__)
 
@@ -25,10 +26,10 @@ def make_request(token: str, method: str, data: dict = None) -> dict:
         logger.error(f"Request error: {e}")
         return {'ok': False, 'error': str(e)}
 
-def start_long_polling(dispatcher: Dispatcher, db, token: str):
+def start_long_polling(dispatcher: Dispatcher, db: Database, token: str):
     """Запуск long polling цикла"""
     offset = 0
-    logger.info("Starting long polling...")
+    logger.info("Starting long polling for Pizza Shop...")
     
     while True:
         try:
@@ -42,8 +43,11 @@ def start_long_polling(dispatcher: Dispatcher, db, token: str):
                 for update in updates:
                     offset = update['update_id'] + 1
                     
+                    # Сохраняем апдейт в БД
+                    db.save_update(update['update_id'], update)
+                    
                     # Передаем обновление в диспетчер
-                    dispatcher.process_update(update, db)
+                    dispatcher.process_update(update, token)
                     
             else:
                 logger.error(f"Error getting updates: {result}")

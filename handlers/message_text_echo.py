@@ -1,65 +1,42 @@
 import logging
-import json
-import os
 from typing import Dict, Any
-from urllib.request import urlopen, Request
-from urllib.parse import urlencode
 from handler import Handler
+from states import UserState
 
 class MessageTextEcho(Handler):
+    """Обработчик для эхо-ответов на текстовые сообщения (резервный)"""
     
-    def can_handle(self, update: Dict[str, Any]) -> bool:
-        return ('message' in update and 
+    def can_handle(self, update: Dict[str, Any], state: UserState) -> bool:
+        """Может обрабатывать только текстовые сообщения не в процессе заказа"""
+        return (state == UserState.START and
+                update.get('message') and 
                 'text' in update['message'])
     
-    def handle(self, update: Dict[str, Any], db) -> bool:
+    def handle(self, update: Dict[str, Any], db, state: UserState, order_json: Dict[str, Any]) -> bool:
+        """Отправляет эхо-ответ"""
         try:
             message = update['message']
             chat_id = message['chat']['id']
             text = message.get('text', '').strip()
             
-            if not text:
-                return True
-            
-            # Обработка команд
-            if text == '/start':
-                welcome_text = (
-                    "👋 Привет! Я эхо-бот\n\n"
-                    "Я умею:\n"
-                    "• Отвечать эхом на текстовые сообщения\n"
-                    "• Отправлять обратно фото\n"
-                    "• Сохранять все сообщения в базу данных\n\n"
-                    "Просто напиши мне что-нибудь или отправь фото!"
-                )
-                self._send_message(chat_id, welcome_text)
-                return False
-                
-            elif text == '/help':
-                help_text = (
-                    "📖 Справка по боту:\n\n"
-                    "Доступные команды:\n"
-                    "/start - начать работу с ботом\n"
-                    "/help - показать эту справку\n\n"
-                    "Функциональность:\n"
-                    "• 💬 Текстовые сообщения - получаешь эхо-ответ\n"
-                    "• 🖼️ Фото - получаешь то же фото обратно\n"
-                    "• 📊 Все сообщения сохраняются в базу данных"
-                )
-                self._send_message(chat_id, help_text)
-                return False
-            
-            # Эхо-ответ для обычных сообщений
-            else:
+            if text and not text.startswith('/'):
                 response_text = f"Эхо: {text}"
                 self._send_message(chat_id, response_text)
                 self.logger.info(f"Echo response sent: {response_text}")
-                return True  
+            
+            return True
             
         except Exception as e:
             self.logger.error(f"Error in MessageTextEcho: {e}")
             return True
     
     def _send_message(self, chat_id: int, text: str) -> None:
+        """Утилита для отправки сообщений"""
+        import json
+        import os
+        from urllib.request import urlopen, Request
+        from urllib.parse import urlencode
+        
         try:
             token = os.getenv('BOT_TOKEN')
             url = f"https://api.telegram.org/bot{token}/sendMessage"
