@@ -27,20 +27,21 @@ class DrinkHandler(Handler):
                 'drink_cola': 'Кола',
                 'drink_fanta': 'Фанта', 
                 'drink_sprite': 'Спрайт',
-                'drink_none': 'none' 
+                'drink_none': ''  # Используем пустую строку вместо None
             }
             
             drink_value = drink_map.get(callback_data)
             
             if drink_value is not None:
-                # Сохраняем выбор напитка (для 'none' сохраняем как null в JSON)
-                drink_to_save = None if drink_value == 'none' else drink_value
+                # Сохраняем выбор напитка
+                # Для 'drink_none' сохраняем пустую строку, а не None
+                drink_to_save = drink_value  # будет '' для "без напитка"
                 db.update_user_order(user_id, {'drink': drink_to_save})
                 db.update_user_state(user_id, UserState.WAIT_FOR_ORDER_APPROVE)
                 
                 # Отвечаем на callback
                 token = self._get_token()
-                drink_text = "Без напитка" if drink_value == 'none' else drink_value
+                drink_text = "Без напитка" if drink_value == '' else drink_value
                 self._answer_callback_query(callback_id, token, f"Напиток: {drink_text}")
                 
                 # Получаем полный заказ для отображения
@@ -50,7 +51,7 @@ class DrinkHandler(Handler):
                 
                 keyboard = InlineKeyboard.create_confirmation_keyboard()
                 self._edit_message_text(chat_id, message_id, response_text, token, keyboard)
-                logging.info(f"Drink {drink_text} selected by user {user_id}")
+                logging.info(f"Drink '{drink_text}' selected by user {user_id}")
             
             return False
             
@@ -65,10 +66,11 @@ class DrinkHandler(Handler):
         summary += f"📏 Размер: {order.get('pizza_size', 'Не выбрано')}\n"
         
         drink = order.get('drink')
-        if drink:
-            summary += f"🥤 Напиток: {drink}\n"
-        else:
+        # Если drink пустая строка или None - значит "без напитка"
+        if not drink:
             summary += "🥤 Напиток: Без напитка\n"
+        else:
+            summary += f"🥤 Напиток: {drink}\n"
             
         return summary
     

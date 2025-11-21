@@ -24,15 +24,18 @@ class OrderReviewHandler(Handler):
             
             token = self._get_token()
             
+            # Отвечаем на callback сразу
+            if callback_data == 'confirm_yes':
+                self._answer_callback_query(callback_id, token, "Заказ подтвержден!")
+            else:
+                self._answer_callback_query(callback_id, token, "Заказ отменен")
+            
             if callback_data == 'confirm_yes':
                 # Подтверждаем заказ
                 db.update_user_state(user_id, UserState.ORDER_FINISHED)
                 
                 current_order = db.get_user_order(user_id)
                 order_summary = self._format_order_summary(current_order)
-                
-                # Отвечаем на callback
-                self._answer_callback_query(callback_id, token, "Заказ подтвержден!")
                 
                 # Обновляем сообщение
                 response_text = (
@@ -43,15 +46,15 @@ class OrderReviewHandler(Handler):
                 )
                 
                 # Убираем клавиатуру
-                self._edit_message_text(chat_id, message_id, response_text, token)
+                empty_keyboard = '{"inline_keyboard":[]}'
+                self._edit_message_text(chat_id, message_id, response_text, token, empty_keyboard)
                 logging.info(f"Order confirmed by user {user_id}")
                 
             else:
                 # Отмена заказа
-                self._answer_callback_query(callback_id, token, "Заказ отменен")
-                
                 response_text = "❌ <b>Заказ отменен.</b>\n\nЕсли хотите начать заново, отправьте /start"
-                self._edit_message_text(chat_id, message_id, response_text, token)
+                empty_keyboard = '{"inline_keyboard":[]}'
+                self._edit_message_text(chat_id, message_id, response_text, token, empty_keyboard)
                 db.clear_user_order(user_id)
                 logging.info(f"Order cancelled by user {user_id}")
             
@@ -59,6 +62,11 @@ class OrderReviewHandler(Handler):
             
         except Exception as e:
             self.logger.error(f"Error in OrderReviewHandler: {e}")
+            try:
+                token = self._get_token()
+                self._answer_callback_query(callback_id, token, "Произошла ошибка")
+            except:
+                pass
             return True
     
     def _format_order_summary(self, order: Dict[str, Any]) -> str:
@@ -68,10 +76,10 @@ class OrderReviewHandler(Handler):
         summary += f"📏 Размер: {order.get('pizza_size', 'Не выбрано')}\n"
         
         drink = order.get('drink')
-        if drink:
-            summary += f"🥤 Напиток: {drink}\n"
-        else:
+        if not drink:
             summary += "🥤 Напиток: Без напитка\n"
+        else:
+            summary += f"🥤 Напиток: {drink}\n"
             
         return summary
     
