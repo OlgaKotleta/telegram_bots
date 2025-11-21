@@ -2,38 +2,54 @@ import logging
 from typing import Dict, Any
 from handler import Handler
 from states import UserState
+from keyboards import InlineKeyboard
 
 class PizzaNameHandler(Handler):
-    """Обработчик выбора названия пиццы"""
+    """Обработчик выбора названия пиццы (через callback)"""
     
     def can_handle(self, update: Dict[str, Any], state: UserState) -> bool:
         return (state == UserState.WAIT_FOR_PIZZA_NAME and
-                update.get('message') and 
-                update['message'].get('text') and
-                update['message']['text'] in ['Маргарита', 'Пепперони', 'Гавайская', 'Четыре сыра'])
+                update.get('callback_query') and
+                update['callback_query']['data'].startswith('pizza_'))
     
     def handle(self, update: Dict[str, Any], db, state: UserState, order_json: Dict[str, Any]) -> bool:
         try:
-            message = update['message']
+            callback_query = update['callback_query']
+            callback_data = callback_query['data']
+            message = callback_query['message']
             chat_id = message['chat']['id']
-            user_id = message['from']['id']
-            pizza_name = message['text']
+            message_id = message['message_id']
+            user_id = callback_query['from']['id']
+            callback_id = callback_query['id']
             
-            # Сохраняем выбор пиццы
-            db.update_user_order(user_id, {'pizza_name': pizza_name})
-            db.update_user_state(user_id, UserState.WAIT_FOR_PIZZA_SIZE)
+            # Маппинг callback_data на названия пицц
+            pizza_map = {
+                'pizza_margarita': 'Маргарита',
+                'pizza_pepperoni': 'Пепперони',
+                'pizza_hawaiian': 'Гавайская',
+                'pizza_cheese': 'Четыре сыра'
+            }
             
-            response_text = (
-                f"🍕 Отлично! Вы выбрали: {pizza_name}\n\n"
-                "Теперь выберите размер:\n"
-                "• Маленькая (25см)\n" 
-                "• Средняя (30см)\n"
-                "• Большая (35см)"
-            )
+            pizza_name = pizza_map.get(callback_data)
             
-            token = self._get_token()
-            self._send_message(chat_id, response_text, token)
-            logging.info(f"Pizza {pizza_name} selected by user {user_id}")
+            if pizza_name:
+                # Сохраняем выбор пиццы
+                db.update_user_order(user_id, {'pizza_name': pizza_name})
+                db.update_user_state(user_id, UserState.WAIT_FOR_PIZZA_SIZE)
+                
+                # Отвечаем на callback
+                token = self._get_token()
+                self._answer_callback_query(callback_id, token, f"Выбрана: {pizza_name}")
+                
+                # Обновляем сообщение
+                response_text = (
+                    f"🍕 <b>Отлично! Вы выбрали: {pizza_name}</b>\n\n"
+                    "Теперь выберите размер:"
+                )
+                
+                keyboard = InlineKeyboard.create_size_keyboard()
+                self._edit_message_text(chat_id, message_id, response_text, token, keyboard)
+                logging.info(f"Pizza {pizza_name} selected by user {user_id}")
             
             return False
             

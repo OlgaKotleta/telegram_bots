@@ -13,10 +13,6 @@ class Handler(ABC):
     def can_handle(self, update: Dict[str, Any], state: UserState) -> bool:
         """
         Проверить, может ли обработчик обработать данный апдейт
-        
-        Args:
-            update: Данные от Telegram
-            state: Текущее состояние пользователя
         """
         pass
     
@@ -24,20 +20,11 @@ class Handler(ABC):
     def handle(self, update: Dict[str, Any], db, state: UserState, order_json: Dict[str, Any]) -> bool:
         """
         Обработать апдейт
-        
-        Args:
-            update: Данные от Telegram
-            db: База данных
-            state: Текущее состояние пользователя
-            order_json: Текущий заказ пользователя
-            
-        Returns:
-            bool: True - продолжить обработку, False - остановить
         """
         pass
     
-    def _send_message(self, chat_id: int, text: str, token: str) -> bool:
-        """Утилита для отправки сообщений"""
+    def _send_message(self, chat_id: int, text: str, token: str, reply_markup: str = None) -> bool:
+        """Утилита для отправки сообщений с клавиатурой"""
         import json
         from urllib.request import urlopen, Request
         from urllib.parse import urlencode
@@ -45,10 +32,16 @@ class Handler(ABC):
         try:
             url = f"https://api.telegram.org/bot{token}/sendMessage"
             
-            data = urlencode({
+            data = {
                 'chat_id': chat_id,
-                'text': text
-            }).encode('utf-8')
+                'text': text,
+                'parse_mode': 'HTML'
+            }
+            
+            if reply_markup:
+                data['reply_markup'] = reply_markup
+            
+            data = urlencode(data).encode('utf-8')
             
             request = Request(url, data=data, headers={
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -61,4 +54,70 @@ class Handler(ABC):
             
         except Exception as e:
             self.logger.error(f"Error sending message: {e}")
+            return False
+    
+    def _answer_callback_query(self, callback_query_id: str, token: str, text: str = None) -> bool:
+        """Ответ на callback query"""
+        import json
+        from urllib.request import urlopen, Request
+        from urllib.parse import urlencode
+        
+        try:
+            url = f"https://api.telegram.org/bot{token}/answerCallbackQuery"
+            
+            data = {
+                'callback_query_id': callback_query_id
+            }
+            
+            if text:
+                data['text'] = text
+                data['show_alert'] = False
+            
+            data = urlencode(data).encode('utf-8')
+            
+            request = Request(url, data=data, headers={
+                'Content-Type': 'application/x-www-form-urlencoded'
+            })
+            
+            with urlopen(request) as response:
+                result = json.loads(response.read().decode('utf-8'))
+                
+            return result.get('ok', False)
+            
+        except Exception as e:
+            self.logger.error(f"Error answering callback: {e}")
+            return False
+    
+    def _edit_message_text(self, chat_id: int, message_id: int, text: str, token: str, reply_markup: str = None) -> bool:
+        """Редактирование сообщения"""
+        import json
+        from urllib.request import urlopen, Request
+        from urllib.parse import urlencode
+        
+        try:
+            url = f"https://api.telegram.org/bot{token}/editMessageText"
+            
+            data = {
+                'chat_id': chat_id,
+                'message_id': message_id,
+                'text': text,
+                'parse_mode': 'HTML'
+            }
+            
+            if reply_markup:
+                data['reply_markup'] = reply_markup
+            
+            data = urlencode(data).encode('utf-8')
+            
+            request = Request(url, data=data, headers={
+                'Content-Type': 'application/x-www-form-urlencoded'
+            })
+            
+            with urlopen(request) as response:
+                result = json.loads(response.read().decode('utf-8'))
+                
+            return result.get('ok', False)
+            
+        except Exception as e:
+            self.logger.error(f"Error editing message: {e}")
             return False

@@ -2,37 +2,54 @@ import logging
 from typing import Dict, Any
 from handler import Handler
 from states import UserState
+from keyboards import InlineKeyboard
 
 class DrinkHandler(Handler):
-    """Обработчик выбора напитка"""
+    """Обработчик выбора напитка (через callback)"""
     
     def can_handle(self, update: Dict[str, Any], state: UserState) -> bool:
         return (state == UserState.WAIT_FOR_DRINKS and
-                update.get('message') and 
-                update['message'].get('text') and
-                update['message']['text'] in ['Кола', 'Фанта', 'Спрайт', 'Без напитка'])
+                update.get('callback_query') and
+                update['callback_query']['data'].startswith('drink_'))
     
     def handle(self, update: Dict[str, Any], db, state: UserState, order_json: Dict[str, Any]) -> bool:
         try:
-            message = update['message']
+            callback_query = update['callback_query']
+            callback_data = callback_query['data']
+            message = callback_query['message']
             chat_id = message['chat']['id']
-            user_id = message['from']['id']
-            drink_choice = message['text']
+            message_id = message['message_id']
+            user_id = callback_query['from']['id']
+            callback_id = callback_query['id']
             
-            # Сохраняем выбор напитка (или отсутствие)
-            drink = None if drink_choice == 'Без напитка' else drink_choice
-            db.update_user_order(user_id, {'drink': drink})
-            db.update_user_state(user_id, UserState.WAIT_FOR_ORDER_APPROVE)
+            # Маппинг callback_data на напитки
+            drink_map = {
+                'drink_cola': 'Кола',
+                'drink_fanta': 'Фанта',
+                'drink_sprite': 'Спрайт',
+                'drink_none': None
+            }
             
-            # Получаем полный заказ для отображения
-            current_order = db.get_user_order(user_id)
+            drink = drink_map.get(callback_data)
             
-            response_text = self._format_order_summary(current_order)
-            response_text += "\n\nПодтверждаете заказ? (Да/Нет)"
-            
-            token = self._get_token()
-            self._send_message(chat_id, response_text, token)
-            logging.info(f"Drink {drink} selected by user {user_id}")
+            if drink is not None:  # включая None для "Без напитка"
+                # Сохраняем выбор напитка
+                db.update_user_order(user_id, {'drink': drink})
+                db.update_user_state(user_id, UserState.WAIT_FOR_ORDER_APPROVE)
+                
+                # Отвечаем на callback
+                token = self._get_token()
+                drink_text = "Без напитка" if drink is None else drink
+                self._answer_callback_query(callback_id, token, f"Напиток: {drink_text}")
+                
+                # Получаем полный заказ для отображения
+                current_order = db.get_user_order(user_id)
+                response_text = self._format_order_summary(current_order)
+                response_text += "\n\n<b>Подтверждаете заказ?</b>"
+                
+                keyboard = InlineKeyboard.create_confirmation_keyboard()
+                self._edit_message_text(chat_id, message_id, response_text, token, keyboard)
+                logging.info(f"Drink {drink} selected by user {user_id}")
             
             return False
             
@@ -42,7 +59,7 @@ class DrinkHandler(Handler):
     
     def _format_order_summary(self, order: Dict[str, Any]) -> str:
         """Форматирование сводки заказа"""
-        summary = "📋 Ваш заказ:\n"
+        summary = "📋 <b>Ваш заказ:</b>\n"
         summary += f"🍕 Пицца: {order.get('pizza_name', 'Не выбрано')}\n"
         summary += f"📏 Размер: {order.get('pizza_size', 'Не выбрано')}\n"
         

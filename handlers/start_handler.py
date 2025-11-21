@@ -2,6 +2,7 @@ import logging
 from typing import Dict, Any
 from handler import Handler
 from states import UserState
+from keyboards import InlineKeyboard
 
 class StartHandler(Handler):
     """Обработчик команды /start"""
@@ -21,26 +22,22 @@ class StartHandler(Handler):
             db.update_user_state(user_id, UserState.WAIT_FOR_PIZZA_NAME)
             
             welcome_text = (
-                "🍕 Добро пожаловать в Pizza Shop!\n\n"
-                "Давайте соберем ваш заказ. Выберите пиццу:\n"
-                "• Маргарита\n"
-                "• Пепперони\n" 
-                "• Гавайская\n"
-                "• Четыре сыра"
+                "🍕 <b>Добро пожаловать в Pizza Shop!</b>\n\n"
+                "Давайте соберем ваш заказ. Выберите пиццу:"
             )
             
+            keyboard = InlineKeyboard.create_pizza_keyboard()
             token = self._get_token()
-            self._send_message(chat_id, welcome_text, token)
+            self._send_message(chat_id, welcome_text, token, keyboard)
             logging.info(f"Start command processed for user {user_id}")
             
-            return False  # Останавливаем обработку
+            return False
             
         except Exception as e:
             self.logger.error(f"Error in StartHandler: {e}")
             return True
     
     def _get_token(self):
-        """Получить токен из переменных окружения"""
         import os
         from dotenv import load_dotenv
         load_dotenv()

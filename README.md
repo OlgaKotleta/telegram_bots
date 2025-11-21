@@ -53,4 +53,4 @@ source .venv/bin/activate  # Linux/Mac
 # .venv\Scripts\activate  # Windows
 
 # Установите зависимости
-pip install -r requirements.txt
+pip install -r requirements.txt```

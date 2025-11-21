@@ -2,48 +2,56 @@ import logging
 from typing import Dict, Any
 from handler import Handler
 from states import UserState
+from keyboards import InlineKeyboard
 
 class OrderReviewHandler(Handler):
-    """Обработчик подтверждения заказа"""
+    """Обработчик подтверждения заказа (через callback)"""
     
     def can_handle(self, update: Dict[str, Any], state: UserState) -> bool:
         return (state == UserState.WAIT_FOR_ORDER_APPROVE and
-                update.get('message') and 
-                update['message'].get('text') in ['Да', 'Нет'])
+                update.get('callback_query') and
+                update['callback_query']['data'].startswith('confirm_'))
     
     def handle(self, update: Dict[str, Any], db, state: UserState, order_json: Dict[str, Any]) -> bool:
         try:
-            message = update['message']
+            callback_query = update['callback_query']
+            callback_data = callback_query['data']
+            message = callback_query['message']
             chat_id = message['chat']['id']
-            user_id = message['from']['id']
-            confirmation = message['text']
+            message_id = message['message_id']
+            user_id = callback_query['from']['id']
+            callback_id = callback_query['id']
             
             token = self._get_token()
             
-            if confirmation == 'Да':
+            if callback_data == 'confirm_yes':
                 # Подтверждаем заказ
                 db.update_user_state(user_id, UserState.ORDER_FINISHED)
                 
                 current_order = db.get_user_order(user_id)
                 order_summary = self._format_order_summary(current_order)
                 
+                # Отвечаем на callback
+                self._answer_callback_query(callback_id, token, "Заказ подтвержден!")
+                
+                # Обновляем сообщение
                 response_text = (
-                    "✅ Заказ подтвержден!\n\n"
+                    "✅ <b>Заказ подтвержден!</b>\n\n"
                     f"{order_summary}\n\n"
-                    "Спасибо за заказ! Ожидайте доставку 🚗\n\n"
+                    "<i>Спасибо за заказ! Ожидайте доставку 🚗</i>\n\n"
                     "Для нового заказа отправьте /start"
                 )
                 
-                self._send_message(chat_id, response_text, token)
+                # Убираем клавиатуру
+                self._edit_message_text(chat_id, message_id, response_text, token)
                 logging.info(f"Order confirmed by user {user_id}")
                 
             else:
                 # Отмена заказа
-                response_text = (
-                    "❌ Заказ отменен.\n\n"
-                    "Если хотите начать заново, отправьте /start"
-                )
-                self._send_message(chat_id, response_text, token)
+                self._answer_callback_query(callback_id, token, "Заказ отменен")
+                
+                response_text = "❌ <b>Заказ отменен.</b>\n\nЕсли хотите начать заново, отправьте /start"
+                self._edit_message_text(chat_id, message_id, response_text, token)
                 db.clear_user_order(user_id)
                 logging.info(f"Order cancelled by user {user_id}")
             
@@ -55,7 +63,7 @@ class OrderReviewHandler(Handler):
     
     def _format_order_summary(self, order: Dict[str, Any]) -> str:
         """Форматирование сводки заказа"""
-        summary = "📋 Ваш заказ:\n"
+        summary = "📋 <b>Ваш заказ:</b>\n"
         summary += f"🍕 Пицца: {order.get('pizza_name', 'Не выбрано')}\n"
         summary += f"📏 Размер: {order.get('pizza_size', 'Не выбрано')}\n"
         
